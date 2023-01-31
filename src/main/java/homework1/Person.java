@@ -29,6 +29,9 @@ class Person {
     }
 
     public void setAge(Integer age) {
+        if (age != null && age < 0) {
+            throw new IllegalArgumentException("Age must be a positive integer.");
+        }
         this.age = age;
     }
 
@@ -36,19 +39,17 @@ class Person {
         return name;
     }
 
-    public void saveToFile(String filePath) {
+    public void saveToFile(String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println("name: " + name);
             if (age != null) {
                 writer.println("age: " + age);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Override
     public String toString() {
-        return "Name: " + this.name + ", Age: " + this.age;
+        return "Name: " + this.name + (this.age != null ? ", Age: " + this.age : "");
     }
 }

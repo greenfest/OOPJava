@@ -65,13 +65,20 @@ class FamilyTree {
 
     public List<Node> getChildren(Person person) {
         Queue<Node> queue = new LinkedList<>();
+        Set<Node> visited = new HashSet<>();
         queue.add(root);
+        visited.add(root);
         while (!queue.isEmpty()) {
             Node current = queue.poll();
             if (current.getPerson().getName().equals(person.getName())) {
                 return current.getChildren();
             }
-            queue.addAll(current.getChildren());
+            for (Node child : current.getChildren()) {
+                if (!visited.contains(child)) {
+                    queue.add(child);
+                    visited.add(child);
+                }
+            }
         }
         return null;
     }
@@ -84,7 +91,9 @@ class FamilyTree {
      */
     public void addConnection(Person parent, Person child, String relationship) {
         Queue<Node> queue = new LinkedList<>();
+        Set<Node> visited = new HashSet<>();
         queue.add(root);
+        visited.add(root);
         while (!queue.isEmpty()) {
             Node current = queue.poll();
             if (current.getPerson().getName().equals(parent.getName())) {
@@ -92,7 +101,12 @@ class FamilyTree {
                 current.addChild(childNode, relationship);
                 return;
             }
-            queue.addAll(current.getChildren());
+            for (Node childNode : current.getChildren()) {
+                if (!visited.contains(childNode)) {
+                    queue.add(childNode);
+                    visited.add(childNode);
+                }
+            }
         }
     }
 
